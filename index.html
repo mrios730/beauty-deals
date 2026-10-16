@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Velour Deals — beauty, for less</title>
+  <meta name="description" content="Hand-picked makeup and skincare deals, refreshed daily.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=DM+Sans:wght@400;600&display=swap">
+  <link rel="stylesheet" href="assets/velour.css">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="wordmark" href="./">Velour <span>Deals</span></a>
+      <button class="saved-link" id="saved-toggle" type="button" aria-pressed="false">
+        Saved <span class="count" id="saved-count">0</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">This week's edit</p>
+        <h1>Beauty you love, <em>for less.</em></h1>
+        <p class="lede">Hand-picked makeup and skincare deals, checked daily. Every shade, every code, nothing you have to dig for.</p>
+      </div>
+      <svg class="hero-art" width="360" height="176" viewBox="0 0 360 176" aria-hidden="true">
+        <rect class="b" x="0" y="0" width="128" height="176" rx="12"/>
+        <rect class="n" x="144" y="32" width="96" height="96" rx="12"/>
+        <rect class="c" x="256" y="0" width="104" height="144" rx="12"/>
+        <circle class="r" cx="64" cy="48" r="16"/><circle class="n" cx="64" cy="96" r="16"/><circle class="r" cx="64" cy="144" r="16"/>
+        <circle class="r" cx="288" cy="40" r="16"/><circle class="z" cx="328" cy="40" r="16"/>
+        <circle class="n" cx="288" cy="88" r="16"/><circle class="r" cx="328" cy="88" r="16"/>
+      </svg>
+    </section>
+
+    <div class="toolbar">
+      <div class="chips" id="chips" role="group" aria-label="Category"></div>
+      <div class="controls">
+        <label class="sr-only" for="search">Search deals</label>
+        <input class="field" id="search" type="search" placeholder="Search brands, products, stores">
+        <label class="sr-only" for="sort">Sort by</label>
+        <select class="field" id="sort">
+          <option value="discount">Biggest discount</option>
+          <option value="ending">Ending soon</option>
+          <option value="price-low">Price: low to high</option>
+          <option value="price-high">Price: high to low</option>
+        </select>
+      </div>
+    </div>
+
+    <p class="results-meta" id="results-meta" aria-live="polite"></p>
+    <ul class="grid" id="grid"></ul>
+    <div class="empty" id="empty" hidden>
+      <h2>Nothing here yet</h2>
+      <p></p>
+      <button class="btn" id="reset" type="button">Show all deals</button>
+    </div>
+
+    <section class="signup" aria-labelledby="signup-title">
+      <div>
+        <h2 id="signup-title">The Friday edit</h2>
+        <p>The week's ten best beauty deals, in your inbox. No spam, unsubscribe anytime.</p>
+      </div>
+      <form id="signup">
+        <label class="sr-only" for="email">Email address</label>
+        <input id="email" type="email" required placeholder="you@example.com" autocomplete="email">
+        <button class="btn" type="submit">Subscribe</button>
+        <p class="note" id="signup-note" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <span>© <span id="year"></span> Velour Deals. Sample data — brands and stores are placeholders.</span>
+      <span>Prices and codes can change; check the retailer before you buy.</span>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status"></div>
+  <script src="assets/deals.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>
