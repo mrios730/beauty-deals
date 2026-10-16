@@ -11,7 +11,7 @@ window.DEALS = [
     desc: "Part of a SIIA markdown on lipsticks, foundations, concealers and contour sticks",
     category: "Face", shape: "pan", color: "#D9A98A", shades: [],
     price: 14.40, was: 36, offer: null, code: null, ends: "2026-10-17", limited: false,
-    image: null, logo: null,
+    image: "assets/img/siia-luminous-foundation.jpg", logo: null,
     url: "https://www.dealnews.com/Ulta-Beauty-SIIA-Cosmetics-Deals-Up-to-50-off-free-shipping-w-35/22289139.html", source: "dealnews"
   },
   {
