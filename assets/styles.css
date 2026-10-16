@@ -67,6 +67,8 @@ select.field { flex: none; max-width: 48%; }
 .card-art { position: relative; aspect-ratio: 4 / 3; background: var(--porcelain); border-bottom: 1px solid var(--hairline); display: grid; place-items: center; }
 .pan { width: 44%; aspect-ratio: 1; border-radius: var(--radius-pill); box-shadow: inset 0 0 0 10px rgba(255,255,255,.18); }
 .pan.lip { width: 22%; aspect-ratio: 1 / 2.2; border-radius: 40% 40% var(--radius-sm) var(--radius-sm); box-shadow: none; }
+.product-img { width: 100%; height: 100%; object-fit: contain; padding: var(--space-32) var(--space-16) var(--space-16); background: #fff; }
+.brand-logo { max-width: 60%; max-height: 40%; object-fit: contain; }
 .badge {
   position: absolute; top: 12px; left: 12px; background: var(--berry); color: var(--porcelain);
   font: 600 11px/14px var(--sans); letter-spacing: .1em; text-transform: uppercase;

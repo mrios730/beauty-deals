@@ -80,17 +80,41 @@
 
   var heart = '<svg viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>';
 
+  function swatch(d) {
+    return '<div class="pan ' + (d.shape === "lip" ? "lip" : "") + '" style="background:' + d.color + '"></div>';
+  }
+
+  // Product photo, else brand logo, else colour swatch.
+  function art(d) {
+    if (d.image) return '<img class="product-img" src="' + esc(d.image) + '" alt="' + esc(d.brand + " " + d.name) + '" loading="lazy" data-fallback="' + (d.logo ? "logo" : "swatch") + '">';
+    if (d.logo) return '<img class="brand-logo" src="' + esc(d.logo) + '" alt="' + esc(d.brand) + ' logo" loading="lazy" data-fallback="swatch">';
+    return swatch(d);
+  }
+
+  // Images that fail to load step down to the next option. `error` doesn't bubble, so listen in the capture phase.
+  grid.addEventListener("error", function (e) {
+    var img = e.target;
+    if (img.tagName !== "IMG" || !img.dataset.fallback) return;
+    var d = deals.filter(function (x) { return x.id === img.closest(".card").dataset.id; })[0];
+    if (!d) return;
+    if (img.dataset.fallback === "logo") {
+      img.outerHTML = '<img class="brand-logo" src="' + esc(d.logo) + '" alt="' + esc(d.brand) + ' logo" loading="lazy" data-fallback="swatch">';
+    } else {
+      img.outerHTML = swatch(d);
+    }
+  }, true);
+
   function card(d) {
     var ends = endsLabel(d.ends);
     var saved = state.saved.has(d.id);
     var swatches = d.shades.length
       ? '<ul class="swatches" aria-label="' + d.shades.length + ' shades">' + d.shades.map(function (s) { return '<li style="background:' + s + '"></li>'; }).join("") + "</ul>"
       : "";
-    return '<li class="card">' +
+    return '<li class="card" data-id="' + esc(d.id) + '">' +
       '<div class="card-art">' +
         '<span class="badge">' + (d.pct !== null ? d.pct + "% off" : esc(d.offer)) + "</span>" +
         (d.limited ? '<span class="badge limited">Limited</span>' : "") +
-        '<div class="pan ' + (d.shape === "lip" ? "lip" : "") + '" style="background:' + d.color + '"></div>' +
+        art(d) +
         '<button class="save" type="button" data-save="' + d.id + '" aria-pressed="' + saved + '" aria-label="' + (saved ? "Remove from saved" : "Save deal") + ": " + esc(d.name) + '">' + heart + "</button>" +
       "</div>" +
       '<div class="card-body">' +
