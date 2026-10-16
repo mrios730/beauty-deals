@@ -67,7 +67,7 @@
       if (state.savedOnly && !state.saved.has(d.id)) return false;
       if (state.category !== "All" && d.category !== state.category) return false;
       if (!q) return true;
-      return (d.brand + " " + d.name + " " + d.desc + " " + d.store).toLowerCase().indexOf(q) !== -1;
+      return (d.brand + " " + d.name + " " + d.desc + " " + (d.offer || "")).toLowerCase().indexOf(q) !== -1;
     });
     var by = {
       discount: function (a, b) { return lastIfNull(a.pct, b.pct, function (x, y) { return y - x; }); },
