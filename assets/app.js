@@ -2,14 +2,28 @@
   "use strict";
 
   var DAY = 86400000;
-  var CATEGORIES = ["All", "Face", "Eyes", "Lips", "Cheeks", "Skincare", "Tools"];
+  var CATEGORIES = ["All", "Face", "Eyes", "Lips", "Cheeks", "Skincare", "Tools", "Offers"];
   var SAVED_KEY = "velour-deals:saved";
   var now = Date.now();
 
+  // `ends` is an inclusive YYYY-MM-DD date: the deal lasts until the end of that local day.
+  function endOfDay(iso) {
+    var p = iso.split("-");
+    return new Date(+p[0], p[1] - 1, +p[2], 23, 59, 59).getTime();
+  }
+
   var deals = window.DEALS.map(function (d) {
-    var pct = Math.round((1 - d.price / d.was) * 100);
-    return Object.assign({}, d, { pct: pct, ends: now + d.endsInDays * DAY });
-  });
+    var pct = d.price != null && d.was ? Math.round((1 - d.price / d.was) * 100) : null;
+    return Object.assign({}, d, { pct: pct, ends: d.ends ? endOfDay(d.ends) : null });
+  }).filter(function (d) { return d.ends === null || d.ends >= now; });
+
+  // Deals missing the sort field (no price, no end date) always go last.
+  function lastIfNull(a, b, f) {
+    if (a == null && b == null) return 0;
+    if (a == null) return 1;
+    if (b == null) return -1;
+    return f(a, b);
+  }
 
   var state = { category: "All", query: "", sort: "discount", savedOnly: false, saved: loadSaved() };
 
@@ -27,8 +41,11 @@
 
   function money(n) { return "$" + (n % 1 ? n.toFixed(2) : n); }
   function endsLabel(ts) {
-    var days = Math.ceil((ts - Date.now()) / DAY);
-    if (days <= 1) return { text: "Ends today", soon: true };
+    if (ts === null) return { text: "No end date listed", soon: false };
+    var today = new Date(); today.setHours(0, 0, 0, 0);
+    var days = Math.round((new Date(ts).setHours(0, 0, 0, 0) - today) / DAY);
+    if (days <= 0) return { text: "Ends today", soon: true };
+    if (days === 1) return { text: "Ends tomorrow", soon: true };
     if (days <= 3) return { text: "Ends in " + days + " days", soon: true };
     return { text: "Ends " + new Date(ts).toLocaleDateString(undefined, { month: "short", day: "numeric" }), soon: false };
   }
@@ -53,10 +70,10 @@
       return (d.brand + " " + d.name + " " + d.desc + " " + d.store).toLowerCase().indexOf(q) !== -1;
     });
     var by = {
-      discount: function (a, b) { return b.pct - a.pct; },
-      ending: function (a, b) { return a.ends - b.ends; },
-      "price-low": function (a, b) { return a.price - b.price; },
-      "price-high": function (a, b) { return b.price - a.price; }
+      discount: function (a, b) { return lastIfNull(a.pct, b.pct, function (x, y) { return y - x; }); },
+      ending: function (a, b) { return lastIfNull(a.ends, b.ends, function (x, y) { return x - y; }); },
+      "price-low": function (a, b) { return lastIfNull(a.price, b.price, function (x, y) { return x - y; }); },
+      "price-high": function (a, b) { return lastIfNull(a.price, b.price, function (x, y) { return y - x; }); }
     }[state.sort];
     return list.sort(by);
   }
@@ -71,7 +88,7 @@
       : "";
     return '<li class="card">' +
       '<div class="card-art">' +
-        '<span class="badge">' + d.pct + "% off</span>" +
+        '<span class="badge">' + (d.pct !== null ? d.pct + "% off" : esc(d.offer)) + "</span>" +
         (d.limited ? '<span class="badge limited">Limited</span>' : "") +
         '<div class="pan ' + (d.shape === "lip" ? "lip" : "") + '" style="background:' + d.color + '"></div>' +
         '<button class="save" type="button" data-save="' + d.id + '" aria-pressed="' + saved + '" aria-label="' + (saved ? "Remove from saved" : "Save deal") + ": " + esc(d.name) + '">' + heart + "</button>" +
@@ -81,11 +98,15 @@
         "<h3>" + esc(d.name) + "</h3>" +
         '<p class="desc">' + esc(d.desc) + "</p>" +
         swatches +
-        '<div class="price-row"><span class="price">' + money(d.price) + '</span><span class="was"><span class="sr-only">was </span>' + money(d.was) + "</span>" +
+        '<div class="price-row">' +
+          (d.price != null
+            ? '<span class="price">' + money(d.price) + "</span>" + (d.was ? '<span class="was"><span class="sr-only">was </span>' + money(d.was) + "</span>" : "")
+            : '<span class="price">' + esc(d.offer) + "</span>") +
           (d.code ? '<button class="code btn ghost" type="button" data-code="' + esc(d.code) + '" aria-label="Copy code ' + esc(d.code) + '">Code <b>' + esc(d.code) + "</b></button>" : "") +
         "</div>" +
       "</div>" +
-      '<div class="card-foot"><span>at ' + esc(d.store) + '</span><span class="ends' + (ends.soon ? " soon" : "") + '">' + ends.text + "</span></div>" +
+      '<div class="card-foot"><span class="ends' + (ends.soon ? " soon" : "") + '">' + ends.text + "</span>" +
+        '<a href="' + esc(d.url) + '" target="_blank" rel="noopener noreferrer">Via ' + esc(d.source) + "</a></div>" +
     "</li>";
   }
 
@@ -153,6 +174,9 @@
   });
 
   $("#year").textContent = new Date().getFullYear();
+  if (window.DEALS_CHECKED) {
+    $("#checked").textContent = new Date(window.DEALS_CHECKED + "T12:00:00").toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" });
+  }
   renderChips();
   render();
 })();

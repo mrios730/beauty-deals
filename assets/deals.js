@@ -1,17 +1,42 @@
-// Sample deals. Brands and retailers are fictional placeholders: replace this
-// list with your real feed. `endsInDays` is relative to page load so the demo
-// never goes stale; a real feed would use an absolute `ends` date instead.
+// Ulta Beauty deals gathered by web search on 2026-10-16. Ulta's own sale page
+// could not be fetched, so each deal links to the report it came from.
+// Prices, codes and end dates change: confirm on ulta.com before buying.
+// `ends` is the last day of the offer (inclusive); null when no end date was given.
+window.DEALS_CHECKED = "2026-10-16";
 window.DEALS = [
-  { id: "fig-velvet", brand: "Maison Rouge", name: "Velvet Matte Lipstick", desc: "Fig Velvet — cool berry, soft-matte finish", category: "Lips", shape: "lip", color: "#8E2F4B", shades: ["#8E2F4B", "#B5485F", "#6E2236", "#C97B84"], price: 18, was: 30, store: "Glow Market", code: "VELVET40", endsInDays: 2, limited: false },
-  { id: "bare-linen", brand: "Studio Nu", name: "Skin Tint SPF 30", desc: "Sheer, dewy coverage in 24 shades", category: "Face", shape: "pan", color: "#E3B9A0", shades: ["#F3D3BD", "#E3B9A0", "#C68E6B", "#8A5A3C", "#5A3826"], price: 26, was: 38, store: "The Beauty Room", code: null, endsInDays: 6, limited: false },
-  { id: "rose-quartz", brand: "Petal & Pan", name: "Cream Blush Duo", desc: "Rose Quartz — buildable cheek and lip colour", category: "Cheeks", shape: "pan", color: "#C97B84", shades: ["#C97B84", "#D9967A"], price: 15, was: 24, store: "Glow Market", code: null, endsInDays: 4, limited: false },
-  { id: "bronze-hour", brand: "Solenne", name: "Golden Hour Bronzer", desc: "Warm, satin bronze for every depth", category: "Cheeks", shape: "pan", color: "#A86B3C", shades: ["#C58A5A", "#A86B3C", "#7A4A28"], price: 22, was: 36, store: "Pure Counter", code: "SUN15", endsInDays: 1, limited: true },
-  { id: "cocoa-liner", brand: "Line Atelier", name: "Precision Gel Liner", desc: "Cocoa — smudge-proof, 24h wear", category: "Eyes", shape: "lip", color: "#2E1E1A", shades: ["#2E1E1A", "#4A3328", "#1C1C1C"], price: 12, was: 20, store: "The Beauty Room", code: null, endsInDays: 9, limited: false },
-  { id: "nude-palette", brand: "Petal & Pan", name: "Bare Essentials Palette", desc: "12 neutral shadows, matte and shimmer", category: "Eyes", shape: "pan", color: "#C9A089", shades: ["#F2E6DE", "#E3B9A0", "#C9A089", "#A86B3C", "#5C3D2E"], price: 29, was: 52, store: "Pure Counter", code: "BARE20", endsInDays: 12, limited: false },
-  { id: "silk-primer", brand: "Studio Nu", name: "Silk Blur Primer", desc: "Smooths texture, grips foundation", category: "Skincare", shape: "pan", color: "#F2E6DE", shades: [], price: 24, was: 32, store: "Glow Market", code: null, endsInDays: 3, limited: false },
-  { id: "berry-gloss", brand: "Maison Rouge", name: "Plumping Lip Oil", desc: "Berry Glaze — tinted, non-sticky", category: "Lips", shape: "lip", color: "#B5485F", shades: ["#B5485F", "#E3B9A0", "#C97B84"], price: 14, was: 22, store: "The Beauty Room", code: "GLAZE", endsInDays: 5, limited: true },
-  { id: "brush-set", brand: "Line Atelier", name: "Essential Brush Set", desc: "Five vegan brushes in a linen roll", category: "Tools", shape: "pan", color: "#7A625A", shades: [], price: 34, was: 58, store: "Pure Counter", code: null, endsInDays: 14, limited: false },
-  { id: "night-balm", brand: "Solenne", name: "Overnight Repair Balm", desc: "Ceramide balm for dry, tired skin", category: "Skincare", shape: "pan", color: "#E8CFC2", shades: [], price: 31, was: 44, store: "Glow Market", code: "NIGHT10", endsInDays: 7, limited: false },
-  { id: "brow-gel", brand: "Studio Nu", name: "Tinted Brow Gel", desc: "Feathered, flexible hold in 6 shades", category: "Eyes", shape: "lip", color: "#5C3D2E", shades: ["#C9A089", "#8A5A3C", "#5C3D2E", "#2E1E1A"], price: 11, was: 18, store: "The Beauty Room", code: null, endsInDays: 8, limited: false },
-  { id: "setting-mist", brand: "Petal & Pan", name: "Dewy Setting Mist", desc: "Locks makeup with a fresh, soft glow", category: "Face", shape: "pan", color: "#EAD3C8", shades: [], price: 16, was: 26, store: "Pure Counter", code: null, endsInDays: 2, limited: false }
+  {
+    id: "siia-luminous-foundation", brand: "SIIA Cosmetics", name: "Luminous Longwear Liquid Foundation",
+    desc: "Part of a SIIA markdown on lipsticks, foundations, concealers and contour sticks",
+    category: "Face", shape: "pan", color: "#D9A98A", shades: [],
+    price: 14.40, was: 36, offer: null, code: null, ends: "2026-10-17", limited: false,
+    url: "https://www.dealnews.com/Ulta-Beauty-SIIA-Cosmetics-Deals-Up-to-50-off-free-shipping-w-35/22289139.html", source: "dealnews"
+  },
+  {
+    id: "kopari-ceramide-cream", brand: "Kopari", name: "Moisture Whipped Ceramide Cream",
+    desc: "Listed as an example from Ulta's skin care, makeup, hair and fragrance sale",
+    category: "Skincare", shape: "pan", color: "#E3C9B8", shades: [],
+    price: 22, was: 44, offer: null, code: null, ends: null, limited: false,
+    url: "https://www.dealnews.com/s581/Ulta/", source: "dealnews"
+  },
+  {
+    id: "ulta-collection-gift", brand: "Ulta Beauty Collection", name: "Free gift with $22+",
+    desc: "Spend $22 on Ulta Beauty Collection and pick a free gift",
+    category: "Offers", shape: "pan", color: "#C97B84", shades: [],
+    price: null, was: null, offer: "Free gift", code: null, ends: "2026-11-21", limited: false,
+    url: "https://www.dealnews.com/Ulta-Beauty-Collection-Free-Gift-w-Purchase-Free-gift-w-22-shipping-varies/22216081.html", source: "dealnews"
+  },
+  {
+    id: "bopis-10-off-40", brand: "Ulta Beauty", name: "$10 off $40 in-store pickup",
+    desc: "Promo code for buy-online, pick-up-in-store orders of $40 or more",
+    category: "Offers", shape: "pan", color: "#8E2F4B", shades: [],
+    price: null, was: null, offer: "$10 off", code: null, ends: "2026-10-18", limited: false,
+    url: "https://www.marieclaire.com/coupons/ulta.com", source: "Marie Claire"
+  },
+  {
+    id: "member-20-off", brand: "Ulta Beauty", name: "20% off for Rewards members",
+    desc: "Online code for Ulta Beauty Rewards members; exclusions apply",
+    category: "Offers", shape: "pan", color: "#A86B3C", shades: [],
+    price: null, was: null, offer: "20% off", code: null, ends: "2026-10-16", limited: false,
+    url: "https://www.marieclaire.com/coupons/ulta.com", source: "Marie Claire"
+  }
 ];

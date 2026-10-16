@@ -19,10 +19,10 @@ To publish, enable GitHub Pages for this repo (Settings → Pages → deploy fro
 - `index.html` — page structure
 - `assets/velour.css` — Velour design tokens (colours, type, spacing, radii) as CSS variables
 - `assets/styles.css` — site styles, built only from those tokens
-- `assets/deals.js` — the deal list (sample data with fictional brands and stores)
+- `assets/deals.js` — the deal list: Ulta Beauty deals gathered by web search (see the date at the top of the file); expired deals hide themselves
 - `assets/app.js` — filtering, sorting, saving and code copying
 
 ## Next steps
 
-- Replace `assets/deals.js` with a real deal feed, and add a link to the retailer on each deal.
+- Refresh `assets/deals.js` regularly; ideally pull straight from ulta.com or an affiliate feed so prices stay current and each deal links to its product page.
 - Connect the newsletter form to an email provider (it is a placeholder today).
