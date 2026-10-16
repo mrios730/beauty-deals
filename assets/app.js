@@ -3,7 +3,7 @@
 
   var DAY = 86400000;
   var CATEGORIES = ["All", "Face", "Eyes", "Lips", "Cheeks", "Skincare", "Tools", "Offers"];
-  var SAVED_KEY = "velour-deals:saved";
+  var SAVED_KEY = "pretty-penny:saved";
   var now = Date.now();
 
   // `ends` is an inclusive YYYY-MM-DD date: the deal lasts until the end of that local day.
