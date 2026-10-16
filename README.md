@@ -23,6 +23,10 @@ To publish, enable GitHub Pages for this repo (Settings → Pages → deploy fro
 - `assets/app.js` — filtering, sorting, saving and code copying
 - `assets/img/` — product photos and brand logos referenced by `image` / `logo` in `deals.js`
 
+## Updating
+
+GitHub Pages lets browsers cache files for up to 10 minutes. After changing a CSS or JS file, bump the `?v=` date on its link in `index.html` so visitors get the new version straight away.
+
 ## Next steps
 
 - Refresh `assets/deals.js` regularly; ideally pull straight from ulta.com or an affiliate feed so prices stay current and each deal links to its product page.
