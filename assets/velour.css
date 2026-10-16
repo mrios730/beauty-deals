@@ -1,0 +1,24 @@
+/* Velour design tokens — mirror of the Velour design system's tokens.json */
+:root {
+  --porcelain: #FBF5F1;
+  --linen: #F2E6DE;
+  --hairline: #E6D6CC;
+  --cocoa: #2E1E1A;
+  --taupe: #7A625A;
+  --berry: #8E2F4B;
+  --rose: #C97B84;
+  --nude: #E3B9A0;
+  --bronze: #A86B3C;
+
+  --serif: "Cormorant Garamond", "Times New Roman", serif;
+  --sans: "DM Sans", system-ui, sans-serif;
+
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-16: 16px;
+  --space-32: 32px;
+
+  --radius-sm: 4px;
+  --radius-md: 12px;
+  --radius-pill: 999px;
+}

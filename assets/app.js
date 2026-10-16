@@ -1,0 +1,158 @@
+(function () {
+  "use strict";
+
+  var DAY = 86400000;
+  var CATEGORIES = ["All", "Face", "Eyes", "Lips", "Cheeks", "Skincare", "Tools"];
+  var SAVED_KEY = "velour-deals:saved";
+  var now = Date.now();
+
+  var deals = window.DEALS.map(function (d) {
+    var pct = Math.round((1 - d.price / d.was) * 100);
+    return Object.assign({}, d, { pct: pct, ends: now + d.endsInDays * DAY });
+  });
+
+  var state = { category: "All", query: "", sort: "discount", savedOnly: false, saved: loadSaved() };
+
+  var $ = function (sel) { return document.querySelector(sel); };
+  var grid = $("#grid"), chips = $("#chips"), meta = $("#results-meta"), empty = $("#empty");
+  var savedBtn = $("#saved-toggle"), savedCount = $("#saved-count"), toast = $("#toast");
+
+  function loadSaved() {
+    try { return new Set(JSON.parse(localStorage.getItem(SAVED_KEY) || "[]")); }
+    catch (e) { return new Set(); }
+  }
+  function persistSaved() {
+    try { localStorage.setItem(SAVED_KEY, JSON.stringify(Array.from(state.saved))); } catch (e) { /* storage off */ }
+  }
+
+  function money(n) { return "$" + (n % 1 ? n.toFixed(2) : n); }
+  function endsLabel(ts) {
+    var days = Math.ceil((ts - Date.now()) / DAY);
+    if (days <= 1) return { text: "Ends today", soon: true };
+    if (days <= 3) return { text: "Ends in " + days + " days", soon: true };
+    return { text: "Ends " + new Date(ts).toLocaleDateString(undefined, { month: "short", day: "numeric" }), soon: false };
+  }
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  function renderChips() {
+    chips.innerHTML = CATEGORIES.map(function (c) {
+      return '<button class="chip" type="button" data-cat="' + c + '" aria-pressed="' + (c === state.category) + '">' + c + "</button>";
+    }).join("");
+  }
+
+  function visible() {
+    var q = state.query.trim().toLowerCase();
+    var list = deals.filter(function (d) {
+      if (state.savedOnly && !state.saved.has(d.id)) return false;
+      if (state.category !== "All" && d.category !== state.category) return false;
+      if (!q) return true;
+      return (d.brand + " " + d.name + " " + d.desc + " " + d.store).toLowerCase().indexOf(q) !== -1;
+    });
+    var by = {
+      discount: function (a, b) { return b.pct - a.pct; },
+      ending: function (a, b) { return a.ends - b.ends; },
+      "price-low": function (a, b) { return a.price - b.price; },
+      "price-high": function (a, b) { return b.price - a.price; }
+    }[state.sort];
+    return list.sort(by);
+  }
+
+  var heart = '<svg viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>';
+
+  function card(d) {
+    var ends = endsLabel(d.ends);
+    var saved = state.saved.has(d.id);
+    var swatches = d.shades.length
+      ? '<ul class="swatches" aria-label="' + d.shades.length + ' shades">' + d.shades.map(function (s) { return '<li style="background:' + s + '"></li>'; }).join("") + "</ul>"
+      : "";
+    return '<li class="card">' +
+      '<div class="card-art">' +
+        '<span class="badge">' + d.pct + "% off</span>" +
+        (d.limited ? '<span class="badge limited">Limited</span>' : "") +
+        '<div class="pan ' + (d.shape === "lip" ? "lip" : "") + '" style="background:' + d.color + '"></div>' +
+        '<button class="save" type="button" data-save="' + d.id + '" aria-pressed="' + saved + '" aria-label="' + (saved ? "Remove from saved" : "Save deal") + ": " + esc(d.name) + '">' + heart + "</button>" +
+      "</div>" +
+      '<div class="card-body">' +
+        '<p class="brand">' + esc(d.brand) + "</p>" +
+        "<h3>" + esc(d.name) + "</h3>" +
+        '<p class="desc">' + esc(d.desc) + "</p>" +
+        swatches +
+        '<div class="price-row"><span class="price">' + money(d.price) + '</span><span class="was"><span class="sr-only">was </span>' + money(d.was) + "</span>" +
+          (d.code ? '<button class="code btn ghost" type="button" data-code="' + esc(d.code) + '" aria-label="Copy code ' + esc(d.code) + '">Code <b>' + esc(d.code) + "</b></button>" : "") +
+        "</div>" +
+      "</div>" +
+      '<div class="card-foot"><span>at ' + esc(d.store) + '</span><span class="ends' + (ends.soon ? " soon" : "") + '">' + ends.text + "</span></div>" +
+    "</li>";
+  }
+
+  function render() {
+    var list = visible();
+    grid.innerHTML = list.map(card).join("");
+    grid.hidden = list.length === 0;
+    empty.hidden = list.length !== 0;
+    empty.querySelector("p").textContent = state.savedOnly && state.saved.size === 0
+      ? "Tap the heart on any deal to keep it here."
+      : "Try another category or a different search.";
+    meta.textContent = list.length + (list.length === 1 ? " deal" : " deals") +
+      (state.savedOnly ? " saved" : "") +
+      (state.category !== "All" ? " in " + state.category : "") +
+      (state.query ? ' matching "' + state.query.trim() + '"' : "");
+    savedCount.textContent = state.saved.size;
+    savedBtn.setAttribute("aria-pressed", state.savedOnly);
+  }
+
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add("show");
+    clearTimeout(showToast.t);
+    showToast.t = setTimeout(function () { toast.classList.remove("show"); }, 1800);
+  }
+
+  chips.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-cat]");
+    if (!b) return;
+    state.category = b.dataset.cat;
+    renderChips(); render();
+  });
+  $("#search").addEventListener("input", function (e) { state.query = e.target.value; render(); });
+  $("#sort").addEventListener("change", function (e) { state.sort = e.target.value; render(); });
+  savedBtn.addEventListener("click", function () { state.savedOnly = !state.savedOnly; render(); });
+  $("#reset").addEventListener("click", function () {
+    state.category = "All"; state.query = ""; state.savedOnly = false;
+    $("#search").value = "";
+    renderChips(); render();
+  });
+
+  grid.addEventListener("click", function (e) {
+    var save = e.target.closest("[data-save]");
+    if (save) {
+      var id = save.dataset.save;
+      if (state.saved.has(id)) { state.saved.delete(id); showToast("Removed from saved"); }
+      else { state.saved.add(id); showToast("Saved"); }
+      persistSaved(); render();
+      return;
+    }
+    var code = e.target.closest("[data-code]");
+    if (code) {
+      var text = code.dataset.code;
+      var done = function () { showToast("Code " + text + " copied"); };
+      if (navigator.clipboard) navigator.clipboard.writeText(text).then(done, function () { showToast("Code: " + text); });
+      else showToast("Code: " + text);
+    }
+  });
+
+  $("#signup").addEventListener("submit", function (e) {
+    e.preventDefault();
+    // Placeholder: wire this to your email provider.
+    $("#signup-note").textContent = "Thanks — you're on the list.";
+    e.target.reset();
+  });
+
+  $("#year").textContent = new Date().getFullYear();
+  renderChips();
+  render();
+})();
