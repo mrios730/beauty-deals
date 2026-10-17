@@ -25,7 +25,7 @@ To publish, enable GitHub Pages for this repo (Settings → Pages → deploy fro
 
 ## Updating
 
-GitHub Pages lets browsers cache files for up to 10 minutes. After changing a CSS or JS file, bump the `?v=` date on its link in `index.html` so visitors get the new version straight away.
+Edit `assets/deals.js` (or any CSS/JS file), commit, and the site picks it up on the next visit. `index.html` adds a timestamp to every CSS and JS URL, so browsers always load the current files instead of a cached copy. Nothing needs bumping.
 
 ## Next steps
 
