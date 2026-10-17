@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>The Pretty Penny — Ulta Beauty deals, for less</title>
-  <meta name="description" content="Current Ulta Beauty makeup and skincare deals and offers, in one place.">
+  <title>The Pretty Penny — Ulta Beauty and Sephora deals, for less</title>
+  <meta name="description" content="Current Ulta Beauty and Sephora makeup and skincare deals and offers, in one place.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=DM+Sans:wght@400;600&display=swap">
-  <link rel="stylesheet" href="assets/prettypenny.css?v=2026-10-16">
-  <link rel="stylesheet" href="assets/styles.css?v=2026-10-16">
+  <link rel="stylesheet" href="assets/prettypenny.css?v=2026-10-17">
+  <link rel="stylesheet" href="assets/styles.css?v=2026-10-17">
 </head>
 <body>
   <header class="site-header">
@@ -24,9 +24,9 @@
   <main class="wrap">
     <section class="hero">
       <div>
-        <p class="eyebrow">Ulta Beauty deals</p>
+        <p class="eyebrow">Ulta Beauty &amp; Sephora deals</p>
         <h1>Beauty you love, <em>for less.</em></h1>
-        <p class="lede">Current Ulta Beauty markdowns and offers in one place. Last checked <span id="checked">October 16, 2026</span>; prices and dates change, so confirm on ulta.com before you buy.</p>
+        <p class="lede">Current Ulta Beauty and Sephora markdowns and offers in one place. Last checked <span id="checked">October 17, 2026</span>; prices and dates change, so confirm with the retailer before you buy.</p>
       </div>
       <svg class="hero-art" width="360" height="176" viewBox="0 0 360 176" aria-hidden="true">
         <rect class="b" x="0" y="0" width="128" height="176" rx="12"/>
@@ -43,6 +43,12 @@
       <div class="controls">
         <label class="sr-only" for="search">Search deals</label>
         <input class="field" id="search" type="search" placeholder="Search brands and products">
+        <label class="sr-only" for="retailer">Store</label>
+        <select class="field" id="retailer">
+          <option value="All">All stores</option>
+          <option value="Ulta Beauty">Ulta Beauty</option>
+          <option value="Sephora">Sephora</option>
+        </select>
         <label class="sr-only" for="sort">Sort by</label>
         <select class="field" id="sort">
           <option value="discount">Biggest discount</option>
@@ -63,18 +69,19 @@
 
     <section class="sources" aria-labelledby="sources-title">
       <h2 id="sources-title">Where these deals come from</h2>
-      <p>The Pretty Penny rounds up Ulta Beauty sales reported by deal sites, checked by hand. Each card links to its report. Prices, codes and end dates change, so confirm on <a href="https://www.ulta.com/promotion/sale" target="_blank" rel="noopener noreferrer">Ulta's sale page</a> before you buy.</p>
+      <p>The Pretty Penny rounds up Ulta Beauty and Sephora sales reported by deal sites, checked by hand. Each card links to its report. Prices, codes and end dates change, so confirm on <a href="https://www.ulta.com/promotion/sale" target="_blank" rel="noopener noreferrer">Ulta's sale page</a> or <a href="https://www.sephora.com/sale" target="_blank" rel="noopener noreferrer">Sephora's sale page</a> before you buy.</p>
       <ul>
         <li><a href="https://www.dealnews.com/s581/Ulta/" target="_blank" rel="noopener noreferrer">dealnews: Ulta deals</a></li>
+        <li><a href="https://www.dealnews.com/s639/Sephora/t1/Deals/" target="_blank" rel="noopener noreferrer">dealnews: Sephora deals</a></li>
         <li><a href="https://www.marieclaire.com/coupons/ulta.com" target="_blank" rel="noopener noreferrer">Marie Claire: Ulta coupons</a></li>
       </ul>
-      <p class="credits">Product photos courtesy of <a href="https://siiacosmetics.com" target="_blank" rel="noopener noreferrer">SIIA Cosmetics</a> and <a href="https://koparibeauty.com" target="_blank" rel="noopener noreferrer">Kopari</a>. Ulta Beauty logo via <a href="https://commons.wikimedia.org/wiki/File:Ulta_Beauty_logo.svg" target="_blank" rel="noopener noreferrer">Wikimedia Commons</a>. All trademarks belong to their owners.</p>
+      <p class="credits">Product photos courtesy of <a href="https://siiacosmetics.com" target="_blank" rel="noopener noreferrer">SIIA Cosmetics</a> and <a href="https://koparibeauty.com" target="_blank" rel="noopener noreferrer">Kopari</a>. Ulta Beauty and Sephora logos via Wikimedia Commons (<a href="https://commons.wikimedia.org/wiki/File:Ulta_Beauty_logo.svg" target="_blank" rel="noopener noreferrer">Ulta</a>, <a href="https://commons.wikimedia.org/wiki/File:Sephora_logo.svg" target="_blank" rel="noopener noreferrer">Sephora</a>). All trademarks belong to their owners.</p>
     </section>
 
     <section class="signup" aria-labelledby="signup-title">
       <div>
-        <h2 id="signup-title">The Ulta deal alert</h2>
-        <p>New Ulta Beauty markdowns and offers, in your inbox each Friday. No spam, unsubscribe anytime.</p>
+        <h2 id="signup-title">The deal alert</h2>
+        <p>New Ulta Beauty and Sephora markdowns and offers, in your inbox each Friday. No spam, unsubscribe anytime.</p>
       </div>
       <form id="signup">
         <label class="sr-only" for="email">Email address</label>
@@ -87,13 +94,13 @@
 
   <footer class="site-footer">
     <div class="wrap">
-      <span>© <span id="year"></span> The Pretty Penny. Not affiliated with Ulta Beauty or the brands shown. Deals gathered from public deal reports.</span>
+      <span>© <span id="year"></span> The Pretty Penny. Not affiliated with Ulta Beauty, Sephora or the brands shown. Deals gathered from public deal reports.</span>
       <span>Prices and codes can change; check the retailer before you buy.</span>
     </div>
   </footer>
 
   <div class="toast" id="toast" role="status"></div>
-  <script src="assets/deals.js?v=2026-10-16"></script>
-  <script src="assets/app.js?v=2026-10-16"></script>
+  <script src="assets/deals.js?v=2026-10-17"></script>
+  <script src="assets/app.js?v=2026-10-17"></script>
 </body>
 </html>
