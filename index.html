@@ -15,8 +15,19 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=DM+Sans:wght@400;600&display=swap">
-  <link rel="stylesheet" href="assets/prettypenny.css?v=2026-10-17">
-  <link rel="stylesheet" href="assets/styles.css?v=2026-10-17">
+  <script>
+    // GitHub Pages lets browsers reuse files for up to 10 minutes, which hid new deals.
+    // A timestamp on every asset URL makes each visit load the current CSS and JS.
+    window.ASSET_T = Date.now();
+    document.write(
+      '<link rel="stylesheet" href="assets/prettypenny.css?t=' + ASSET_T + '">' +
+      '<link rel="stylesheet" href="assets/styles.css?t=' + ASSET_T + '">'
+    );
+  </script>
+  <noscript>
+    <link rel="stylesheet" href="assets/prettypenny.css">
+    <link rel="stylesheet" href="assets/styles.css">
+  </noscript>
 </head>
 <body>
   <header class="site-header">
@@ -107,7 +118,11 @@
   </footer>
 
   <div class="toast" id="toast" role="status"></div>
-  <script src="assets/deals.js?v=2026-10-17"></script>
-  <script src="assets/app.js?v=2026-10-17"></script>
+  <script>
+    document.write(
+      '<script src="assets/deals.js?t=' + ASSET_T + '"><\/script>' +
+      '<script src="assets/app.js?t=' + ASSET_T + '"><\/script>'
+    );
+  </script>
 </body>
 </html>
