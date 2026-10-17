@@ -25,7 +25,7 @@
     return f(a, b);
   }
 
-  var state = { category: "All", query: "", sort: "discount", savedOnly: false, saved: loadSaved() };
+  var state = { category: "All", retailer: "All", query: "", sort: "discount", savedOnly: false, saved: loadSaved() };
 
   var $ = function (sel) { return document.querySelector(sel); };
   var grid = $("#grid"), chips = $("#chips"), meta = $("#results-meta"), empty = $("#empty");
@@ -66,8 +66,9 @@
     var list = deals.filter(function (d) {
       if (state.savedOnly && !state.saved.has(d.id)) return false;
       if (state.category !== "All" && d.category !== state.category) return false;
+      if (state.retailer !== "All" && d.retailer !== state.retailer) return false;
       if (!q) return true;
-      return (d.brand + " " + d.name + " " + d.desc + " " + (d.offer || "")).toLowerCase().indexOf(q) !== -1;
+      return (d.brand + " " + d.name + " " + d.desc + " " + (d.offer || "") + " " + d.retailer).toLowerCase().indexOf(q) !== -1;
     });
     var by = {
       discount: function (a, b) { return lastIfNull(a.pct, b.pct, function (x, y) { return y - x; }); },
@@ -118,7 +119,8 @@
         '<button class="save" type="button" data-save="' + d.id + '" aria-pressed="' + saved + '" aria-label="' + (saved ? "Remove from saved" : "Save deal") + ": " + esc(d.name) + '">' + heart + "</button>" +
       "</div>" +
       '<div class="card-body">' +
-        '<p class="brand">' + esc(d.brand) + "</p>" +
+        '<p class="brand">' + esc(d.brand) +
+          (d.brand.indexOf(d.retailer) === 0 ? "" : ' <span class="retailer">at ' + esc(d.retailer) + "</span>") + "</p>" +
         "<h3>" + esc(d.name) + "</h3>" +
         '<p class="desc">' + esc(d.desc) + "</p>" +
         swatches +
@@ -145,6 +147,7 @@
     meta.textContent = list.length + (list.length === 1 ? " deal" : " deals") +
       (state.savedOnly ? " saved" : "") +
       (state.category !== "All" ? " in " + state.category : "") +
+      (state.retailer !== "All" ? " at " + state.retailer : "") +
       (state.query ? ' matching "' + state.query.trim() + '"' : "");
     savedCount.textContent = state.saved.size;
     savedBtn.setAttribute("aria-pressed", state.savedOnly);
@@ -165,10 +168,11 @@
   });
   $("#search").addEventListener("input", function (e) { state.query = e.target.value; render(); });
   $("#sort").addEventListener("change", function (e) { state.sort = e.target.value; render(); });
+  $("#retailer").addEventListener("change", function (e) { state.retailer = e.target.value; render(); });
   savedBtn.addEventListener("click", function () { state.savedOnly = !state.savedOnly; render(); });
   $("#reset").addEventListener("click", function () {
-    state.category = "All"; state.query = ""; state.savedOnly = false;
-    $("#search").value = "";
+    state.category = "All"; state.retailer = "All"; state.query = ""; state.savedOnly = false;
+    $("#search").value = ""; $("#retailer").value = "All";
     renderChips(); render();
   });
 

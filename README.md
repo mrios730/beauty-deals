@@ -19,7 +19,7 @@ To publish, enable GitHub Pages for this repo (Settings → Pages → deploy fro
 - `index.html` — page structure
 - `assets/prettypenny.css` — Pretty Penny design tokens (colours, type, spacing, radii) as CSS variables
 - `assets/styles.css` — site styles, built only from those tokens
-- `assets/deals.js` — the deal list: Ulta Beauty deals gathered by web search (see the date at the top of the file); expired deals hide themselves
+- `assets/deals.js` — the deal list: Ulta Beauty and Sephora deals gathered by web search (see the date at the top of the file); expired deals hide themselves
 - `assets/app.js` — filtering, sorting, saving and code copying
 - `assets/img/` — product photos and brand logos referenced by `image` / `logo` in `deals.js`
 

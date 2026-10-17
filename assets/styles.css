@@ -48,14 +48,15 @@ button, input, select { font: inherit; color: inherit; }
 }
 .chip:hover { border-color: var(--taupe); }
 .chip[aria-pressed="true"] { background: var(--berry); border-color: var(--berry); color: var(--porcelain); }
-.controls { display: flex; gap: var(--space-8); flex: 1 1 320px; min-width: 0; max-width: 100%; justify-content: flex-end; }
+.controls { display: flex; flex-wrap: wrap; gap: var(--space-8); flex: 1 1 560px; min-width: 0; max-width: 100%; justify-content: flex-end; }
 .field {
   background: var(--linen); border: 1px solid var(--hairline); border-radius: var(--radius-sm);
   padding: var(--space-8) 12px; min-width: 0;
 }
 .field::placeholder { color: var(--taupe); }
-input.field { flex: 1 1 0; }
-select.field { flex: none; max-width: 48%; }
+input.field { flex: 1 1 100%; }
+select.field { flex: 1 1 0; min-width: 0; }
+@media (min-width: 720px) { .controls { flex-wrap: nowrap; } input.field { flex: 1 1 200px; min-width: 200px; } select.field { flex: none; } }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 .results-meta { color: var(--taupe); font-size: 13px; line-height: 18px; margin: var(--space-16) 0; }
@@ -85,6 +86,7 @@ select.field { flex: none; max-width: 48%; }
 .save[aria-pressed="true"] svg { fill: currentColor; }
 .card-body { padding: var(--space-16); display: flex; flex-direction: column; gap: var(--space-8); flex: 1; }
 .brand { font: 600 11px/14px var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--taupe); margin: 0; }
+.brand .retailer { font-weight: 400; letter-spacing: .04em; text-transform: none; }
 .card h3 { font: 600 24px/28px var(--serif); margin: 0; }
 .desc { color: var(--taupe); font-size: 13px; line-height: 18px; margin: 0; }
 .swatches { display: flex; gap: var(--space-4); margin: var(--space-4) 0; padding: 0; list-style: none; }
