@@ -32,7 +32,7 @@ PAUSE_SECONDS = 1       # between page requests, to be polite
 # "save $X" in a Sets category rather than as a percentage markdown.
 SET_WORDS = re.compile(r"\b(set|kit|duo|trio|bundle|routine|ritual|collection|essentials|vault|value|jumbo)\b|\+", re.I)
 
-# First match wins; checked against the product type, tags and title.
+# First match wins; see category_for for the order fields are checked in.
 CATEGORY_WORDS = [
     ("Lips", r"\blip|gloss|lipstick"),
     ("Eyes", r"\beye|mascara|liner|brow|shadow|lash"),
@@ -47,9 +47,7 @@ def fetch_products(domain):
     products = []
     for page in range(1, MAX_PAGES + 1):
         url = "https://%s/products.json?limit=250&page=%d" % (domain, page)
-        req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT, "Accept": "application/json"})
-        with urllib.request.urlopen(req, timeout=30) as resp:
-            batch = json.load(resp).get("products", [])
+        batch = get_json(url).get("products", [])
         if not batch:
             break
         products.extend(batch)
@@ -57,11 +55,26 @@ def fetch_products(domain):
     return products
 
 
+def get_json(url, retries=(5, 15)):
+    """GET a JSON URL, retrying temporary failures (429 and 5xx) after the given pauses."""
+    req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT, "Accept": "application/json"})
+    for pause in list(retries) + [None]:
+        try:
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                return json.load(resp)
+        except urllib.error.HTTPError as e:
+            if pause is None or not (e.code == 429 or e.code >= 500):
+                raise
+            time.sleep(pause)
+
+
 def category_for(product):
-    text = " ".join([product.get("product_type") or "", " ".join(product.get("tags") or []), product["title"]])
-    for name, pattern in CATEGORY_WORDS:
-        if re.search(pattern, text, re.I):
-            return name
+    # The brand's own product type is the best signal, then the title; tags are noisy
+    # ("under-eye" on a concealer), so they only count when nothing else matches.
+    for text in (product.get("product_type") or "", product["title"], " ".join(product.get("tags") or [])):
+        for name, pattern in CATEGORY_WORDS:
+            if re.search(pattern, text, re.I):
+                return name
     return "Skincare"
 
 
@@ -110,7 +123,7 @@ def deals_for(brand):
         pct, price, was, variant = found
         if pct < MIN_DISCOUNT or re.search(r"\(\$\d+ value\)|free gift|mystery", p["title"], re.I):
             continue
-        is_set = bool(SET_WORDS.search(p["title"]))
+        is_set = bool(SET_WORDS.search(p["title"]) or SET_WORDS.search(p.get("product_type") or ""))
         shade = variant.get("title") if variant.get("title") not in (None, "Default Title") else None
         desc = clean_text(p.get("body_html"))
         if is_set:
@@ -133,12 +146,34 @@ def deals_for(brand):
             "url": "https://%s/products/%s" % (brand["domain"], p["handle"]),
             "source": brand["name"],
             "_rank": pct if not is_set else was - price,
+            "_base": base_title(p["title"]),
         })
+    deals = merge_shades(deals)
     markdowns = sorted((d for d in deals if d["category"] != "Sets"), key=lambda d: -d["_rank"])[:MAX_MARKDOWNS]
     sets = sorted((d for d in deals if d["category"] == "Sets"), key=lambda d: -d["_rank"])[:MAX_SETS]
     for d in markdowns + sets:
-        del d["_rank"]
+        del d["_rank"], d["_base"]
     return markdowns + sets
+
+
+def base_title(title):
+    """Some stores list each shade as its own product ("Concealer — #270"); this is the shared name."""
+    return re.split(r"\s+[—–]\s+|\s+-\s+#", title)[0].strip()
+
+
+def merge_shades(deals):
+    """Collapse shade-per-product listings into one card: the biggest markdown, plus a shade count."""
+    groups = {}
+    for d in deals:
+        groups.setdefault(d["_base"], []).append(d)
+    merged = []
+    for base, group in groups.items():
+        best = max(group, key=lambda d: d["_rank"])
+        best["name"] = base
+        if len(group) > 1:
+            best["desc"] = "%d shades on sale. %s" % (len(group), best["desc"])
+        merged.append(best)
+    return merged
 
 
 def variant_option_name(product):
@@ -150,19 +185,31 @@ def fmt(n):
     return ("%.2f" % n).rstrip("0").rstrip(".")
 
 
+def previous_deals():
+    """Deals from the last run, so a store that is briefly down keeps its listings."""
+    try:
+        text = open(OUT_FILE).read()
+    except OSError:
+        return []
+    match = re.search(r"window\.BRAND_DEALS = (\[.*\]);", text, re.S)
+    return json.loads(match.group(1)) if match else []
+
+
 def main():
     brands = json.load(open(BRANDS_FILE))["brands"]
+    previous = previous_deals()
     all_deals, failed = [], []
     for brand in brands:
         try:
             found = deals_for(brand)
             print("%-20s %d deals" % (brand["name"], len(found)))
-            all_deals.extend(found)
         except (urllib.error.URLError, OSError, ValueError, KeyError) as e:
             failed.append(brand["name"])
-            print("%-20s FAILED: %s" % (brand["name"], e), file=sys.stderr)
+            found = [d for d in previous if d.get("retailer") == brand["name"]]
+            print("%-20s FAILED: %s (kept %d deals from the last run)" % (brand["name"], e, len(found)), file=sys.stderr)
+        all_deals.extend(found)
 
-    if failed and not all_deals:
+    if len(failed) == len(brands):
         sys.exit("No store could be read; leaving %s unchanged." % os.path.relpath(OUT_FILE, ROOT))
 
     today = datetime.date.today().isoformat()
@@ -173,7 +220,7 @@ def main():
         f.write("window.BRAND_DEALS = %s;\n" % json.dumps(all_deals, indent=2, ensure_ascii=False))
     print("Wrote %d deals to %s" % (len(all_deals), os.path.relpath(OUT_FILE, ROOT)))
     if failed:
-        print("Skipped (could not be read): %s" % ", ".join(failed), file=sys.stderr)
+        print("Could not be read this time (last run's deals kept): %s" % ", ".join(failed), file=sys.stderr)
 
 
 if __name__ == "__main__":

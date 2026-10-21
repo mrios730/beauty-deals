@@ -24,6 +24,7 @@ To publish, enable GitHub Pages for this repo (Settings → Pages → deploy fro
    - Single products whose price was cut are listed first, by percentage off.
    - Sets, kits, bundles and jumbo sizes are compared against the value the brand lists for their contents, not a price they ever sold for, so they go in a **Sets** category as "Set: save $X", never as a percentage off.
    - Free gifts, $0 items and markdowns under 10% are skipped.
+   - Stores that list each shade as its own product (Fenty Beauty does) are merged into one card per product, with a shade count.
 2. **Retailer deals (by hand)** — `assets/deals.js` holds Ulta Beauty and Sephora deals gathered from deal-site reports (dealnews, Marie Claire), because both retailers block automated access to their sale pages. Each card links to its report. Deals with an end date hide themselves once it passes.
 
 ### Refresh brand-store deals
@@ -32,11 +33,13 @@ To publish, enable GitHub Pages for this repo (Settings → Pages → deploy fro
 python3 scripts/fetch_brand_deals.py
 ```
 
-Then commit the updated `assets/brand-deals.js`. The script uses only Python's standard library. If a store can't be read it is skipped and reported; if none can be read, the existing file is left unchanged.
+Then commit the updated `assets/brand-deals.js`. The script uses only Python's standard library. Temporary errors are retried; if a store still can't be read, its deals from the last run are kept and it is reported. If no store can be read, the file is left unchanged.
 
 ### Add a brand
 
-Add an entry to `scripts/brands.json` with the name to show on cards and the store's domain. The store must run on Shopify (it serves `/products.json`); most independent beauty brands do. Re-run the script.
+Add an entry to `scripts/brands.json` with the name to show on cards and the store's domain; include a path for a regional store (e.g. `hudabeauty.com/en-us`). The store must run on Shopify (it serves `/products.json`). Re-run the script.
+
+Checked so far: SIIA Cosmetics, Kopari, Fenty Beauty, Rare Beauty, Huda Beauty and e.l.f. Cosmetics are Shopify stores and are in the list. The Ordinary isn't (no `/products.json`). L'Oréal brands (L'Oréal Paris, Maybelline, CeraVe, La Roche-Posay) and Estée Lauder brands (Estée Lauder, MAC) don't appear to use Shopify, so their deals need the retailer affiliate feeds.
 
 ## Files
 
