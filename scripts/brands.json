@@ -1,0 +1,7 @@
+{
+  "_comment": "Brand stores to check for markdowns. Each must be a Shopify store (it serves /products.json). `name` is shown on cards and in the store filter.",
+  "brands": [
+    { "name": "SIIA Cosmetics", "domain": "siiacosmetics.com" },
+    { "name": "Kopari", "domain": "koparibeauty.com" }
+  ]
+}
