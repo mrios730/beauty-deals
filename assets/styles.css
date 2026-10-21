@@ -92,11 +92,11 @@ select.field { flex: 1 1 0; min-width: 0; }
 .swatches { display: flex; gap: var(--space-4); margin: var(--space-4) 0; padding: 0; list-style: none; }
 .swatches li { width: 18px; height: 18px; border-radius: var(--radius-pill); border: 1px solid rgba(46,30,26,.15); }
 .price-row { display: flex; align-items: baseline; gap: var(--space-8); margin-top: auto; padding-top: var(--space-8); }
-.price { font-weight: 600; font-size: 18px; }
+.price { font-weight: 600; font-size: 18px; white-space: nowrap; }
 .was { color: var(--taupe); text-decoration: line-through; font-size: 13px; }
 .code { margin-left: auto; font-size: 13px; color: var(--cocoa); }
 .code b { font-weight: 600; letter-spacing: .06em; }
-.card-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--space-8); padding: 12px var(--space-16); border-top: 1px solid var(--hairline); font-size: 13px; line-height: 18px; color: var(--taupe); }
+.card-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-4) var(--space-8); padding: 12px var(--space-16); border-top: 1px solid var(--hairline); font-size: 13px; line-height: 18px; color: var(--taupe); }
 .card-foot .ends { white-space: nowrap; }
 .card-foot .ends.soon { color: var(--berry); font-weight: 600; }
 .card-foot a { color: var(--berry); font-weight: 600; text-decoration: none; white-space: nowrap; }

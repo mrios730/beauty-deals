@@ -1,0 +1,29 @@
+{
+  "_comment": "Brand stores to check for markdowns. Each must be a Shopify store (it serves /products.json); `domain` may include a path for a regional store. `name` is shown on cards and in the store filter.",
+  "brands": [
+    {
+      "name": "SIIA Cosmetics",
+      "domain": "siiacosmetics.com"
+    },
+    {
+      "name": "Kopari",
+      "domain": "koparibeauty.com"
+    },
+    {
+      "name": "Fenty Beauty",
+      "domain": "fentybeauty.com"
+    },
+    {
+      "name": "Rare Beauty",
+      "domain": "rarebeauty.com"
+    },
+    {
+      "name": "Huda Beauty",
+      "domain": "hudabeauty.com/en-us"
+    },
+    {
+      "name": "e.l.f. Cosmetics",
+      "domain": "elfcosmetics.com"
+    }
+  ]
+}

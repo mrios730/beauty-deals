@@ -19,15 +19,6 @@ window.DEALS = [
     url: "https://www.dealnews.com/Ulta-Beauty-SIIA-Cosmetics-Deals-Up-to-50-off-free-shipping-w-35/22289139.html", source: "dealnews"
   },
   {
-    id: "kopari-ceramide-cream", brand: "Kopari", name: "Moisture Whipped Ceramide Cream",
-    desc: "Listed as an example from Ulta's skin care, makeup, hair and fragrance sale",
-    category: "Skincare", shape: "pan", color: "#E3C9B8", shades: [],
-    price: 22, was: 44, offer: null, code: null, ends: null, limited: false,
-    image: "assets/img/kopari-ceramide-cream.jpg", logo: null,
-    retailer: "Ulta Beauty",
-    url: "https://www.dealnews.com/s581/Ulta/", source: "dealnews"
-  },
-  {
     id: "ulta-collection-gift", brand: "Ulta Beauty Collection", name: "Free gift with $22+",
     desc: "Spend $22 on Ulta Beauty Collection and pick a free gift",
     category: "Offers", shape: "pan", color: "#C97B84", shades: [],

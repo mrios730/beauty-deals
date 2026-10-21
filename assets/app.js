@@ -2,7 +2,7 @@
   "use strict";
 
   var DAY = 86400000;
-  var CATEGORIES = ["All", "Face", "Eyes", "Lips", "Cheeks", "Skincare", "Tools", "Offers"];
+  var CATEGORIES = ["All", "Face", "Eyes", "Lips", "Cheeks", "Skincare", "Tools", "Sets", "Offers"];
   var SAVED_KEY = "pretty-penny:saved";
   var now = Date.now();
 
@@ -12,7 +12,8 @@
     return new Date(+p[0], p[1] - 1, +p[2], 23, 59, 59).getTime();
   }
 
-  var deals = window.DEALS.map(function (d) {
+  // Hand-picked retailer deals (deals.js) plus markdowns from brand stores (brand-deals.js, generated).
+  var deals = (window.DEALS || []).concat(window.BRAND_DEALS || []).map(function (d) {
     var pct = d.price != null && d.was ? Math.round((1 - d.price / d.was) * 100) : null;
     return Object.assign({}, d, { pct: pct, ends: d.ends ? endOfDay(d.ends) : null });
   }).filter(function (d) { return d.ends === null || d.ends >= now; });
@@ -202,9 +203,17 @@
   });
 
   $("#year").textContent = new Date().getFullYear();
-  if (window.DEALS_CHECKED) {
-    $("#checked").textContent = new Date(window.DEALS_CHECKED + "T12:00:00").toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" });
+  var checked = [window.DEALS_CHECKED, window.BRAND_DEALS_CHECKED].filter(Boolean).sort().pop();
+  if (checked) {
+    $("#checked").textContent = new Date(checked + "T12:00:00").toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" });
   }
+  // Store filter options come from the data: retailers first in the order deals.js lists them, then brand stores.
+  var stores = [];
+  deals.forEach(function (d) { if (stores.indexOf(d.retailer) === -1) stores.push(d.retailer); });
+  $("#retailer").innerHTML = '<option value="All">All stores</option>' + stores.map(function (r) {
+    return '<option value="' + esc(r) + '">' + esc(r) + "</option>";
+  }).join("");
+
   renderChips();
   render();
 })();
